@@ -21,6 +21,16 @@ st.markdown("""
     @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;800&display=swap');
     html, body, [class*="css"] { font-family: 'Heebo', sans-serif; }
 
+    /* RTL - מימין לשמאל */
+    .stApp { direction: rtl; }
+    .stMarkdown, .stText, p, h1, h2, h3, h4, label, div { text-align: right; }
+    .stSelectbox label, .stMultiSelect label, .stSlider label, .stRadio label { text-align: right !important; }
+    [data-testid="stSidebar"] { direction: rtl; }
+    [data-testid="stDataFrame"] { direction: rtl; }
+    .stTabs [data-baseweb="tab-list"] { flex-direction: row-reverse; }
+    .stRadio [data-testid="stMarkdownContainer"] { text-align: right; }
+    div[data-testid="metric-container"] label { text-align: center !important; }
+
     .main-header {
         text-align: center;
         padding: 28px 0 12px 0;
@@ -209,7 +219,7 @@ LEAGUES = {
     "🇩🇪 Bundesliga":           {"id": 78, "country": "Germany",  "color": "#d32f2f"},
     "🇫🇷 Ligue 1":              {"id": 61, "country": "France",   "color": "#0d47a1"},
 }
-SEASON = 2024
+SEASON = 2025
 
 # שיאי עונה מפורסמים (לפי ליגה)
 SEASON_RECORDS = {
@@ -504,7 +514,7 @@ now = datetime.now().strftime("%d/%m/%Y %H:%M")
 st.markdown(f"""
 <div class="main-header">
     <h1>⚽ 5 הליגות הגדולות</h1>
-    <p>עדכון אחרון: {now} | עונה 2024/25</p>
+    <p>עדכון אחרון: {now} | עונה 2025/26</p>
 </div>
 """, unsafe_allow_html=True)
 
