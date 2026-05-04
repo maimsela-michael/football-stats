@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ליגות אירופה 2025-26</title>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Rubik',Tahoma,sans-serif;background:#f0f2f8;direction:rtl;max-width:600px;margin:0 auto;min-height:100vh}
+
+.hdr{background:linear-gradient(160deg,#0d0d2b,#1a1a4e,#0a2a40);padding:18px 16px 14px;color:#fff;text-align:center}
+.hdr h1{font-size:17px;font-weight:900;letter-spacing:1px;margin-bottom:4px}
+.hdr-sub{font-size:11px;color:#8899bb;margin-bottom:10px}
+.league-pills{display:flex;justify-content:center;gap:5px;flex-wrap:wrap;margin-bottom:8px}
+.lpill{padding:3px 9px;border-radius:12px;font-size:11px;font-weight:700;color:#fff;box-shadow:0 2px 4px rgba(0,0,0,.3)}
+.extras-label{font-size:10px;color:#667799;margin-bottom:4px}
+.extra-btns{display:flex;justify-content:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.extrabtn{border-radius:14px;padding:4px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Rubik',sans-serif;transition:all .2s}
+.refresh-btn{background:linear-gradient(135deg,#f59e0b,#e84b10);color:#fff;border:none;border-radius:20px;padding:8px 20px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Rubik',sans-serif;transition:all .2s;box-shadow:0 3px 12px rgba(0,0,0,.35)}
+.refresh-btn:disabled{background:rgba(255,255,255,.15);cursor:not-allowed}
+.quota-bar{margin-top:8px;font-size:10px;color:#8899bb}
+.quota-used{color:#f59e0b;font-weight:700}
+.err-msg{font-size:10px;color:#fca5a5;margin-top:4px}
+
+.tabs{display:flex;background:#fff;border-bottom:2px solid #e5e7eb;box-shadow:0 2px 8px rgba(0,0,0,.06);overflow-x:auto}
+.tab{flex:1;min-width:60px;padding:10px 4px;border:none;background:#f9fafb;border-bottom:3px solid transparent;cursor:pointer;font-size:10px;font-weight:500;color:#888;font-family:'Rubik',sans-serif;white-space:nowrap;transition:all .2s}
+.tab.active{background:#fff;border-bottom-color:var(--tc);color:var(--tc);font-weight:900}
+
+.sec-hdr{padding:8px 14px;background:#fff;border-bottom:1px solid #eee;direction:rtl;display:flex;align-items:baseline;gap:6px}
+.sec-title{font-weight:800;font-size:14px}
+.sec-hint{font-size:10px;color:#aaa}
+
+.row{display:flex;align-items:center;padding:9px 12px;border-bottom:1px solid #eee;gap:9px;direction:rtl;transition:background .15s}
+.row:nth-child(odd){background:#fff}
+.rank{width:26px;text-align:center;flex-shrink:0;font-size:12px;color:#aaa;font-weight:700}
+.medal{font-size:20px}
+.avatar{width:38px;height:38px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:11px;overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:contain;border-radius:50%}
+.info{flex:1;min-width:0}
+.team-name{font-weight:800;font-size:13px;color:#1a1a2e;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lpill-sm{display:inline-block;border-radius:8px;padding:1px 6px;font-size:9px;font-weight:700;color:#fff}
+.trophy{font-size:12px;margin-left:3px}
+
+/* standings metric */
+.metric-std{display:flex;gap:8px;align-items:center;flex-shrink:0}
+.gms-col{text-align:center}
+.gms-num{font-size:20px;font-weight:400;color:#aaa;line-height:1}
+.gms-lbl{font-size:9px;color:#ccc}
+.pts-col{text-align:center}
+.pts-num{font-size:20px;font-weight:900;color:#1a1a2e;line-height:1}
+.pts-lbl{font-size:9px;font-weight:900;color:#1a1a2e}
+.pct{border-radius:8px;padding:3px 7px;text-align:center;min-width:46px}
+.pct-num{font-size:13px;font-weight:900;color:#fff}
+.pct-lbl{font-size:8px;color:rgba(255,255,255,.85)}
+
+/* attack/defense */
+.metric-atk{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.stat-side{text-align:right}
+.stat-gms{font-size:15px;font-weight:400;color:#aaa}
+.stat-gms-l{font-size:8px;color:#bbb}
+.stat-avg{font-size:9px;font-weight:600;margin-top:1px}
+.big-num{font-size:32px;font-weight:900;line-height:1}
+
+/* scorers/assists/involvement */
+.metric-player{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.player-img{width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid transparent}
+.player-ball{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#fff;flex-shrink:0}
+.player-sub{font-size:9px;color:#aaa;margin-top:1px;text-align:center}
+
+/* hot/cold */
+.hot-hdr{padding:9px 14px;font-size:11px;font-weight:900;letter-spacing:.5px;border-bottom:1px solid #eee;border-right:4px solid}
+.form-dots{display:flex;gap:3px;flex-shrink:0}
+.fd{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;color:#fff}
+.fd-w{background:#16a34a}.fd-d{background:#d97706}.fd-l{background:#dc2626}
+.form-badge{font-size:16px;flex-shrink:0}
+
+/* legend */
+.legend{padding:7px 14px;background:#fff;border-top:1px solid #eee}
+.leg-t{font-size:9px;color:#888;font-weight:700;margin-bottom:3px}
+.leg-items{display:flex;gap:7px;flex-wrap:wrap}
+.leg-i{display:flex;align-items:center;gap:3px;font-size:10px;color:#666}
+.leg-dot{width:10px;height:10px;border-radius:3px;display:inline-block}
+
+.loader{padding:30px;text-align:center;color:#aaa;font-size:13px}
+.footer{padding:10px;background:#0d0d2b;color:#445566;text-align:center;font-size:10px}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div style="font-size:20px;margin-bottom:5px">🏆 ⚽ 🏆</div>
+  <h1>הליגות הבכירות של אירופה</h1>
+  <div class="hdr-sub" id="updInfo">עונת 2025-26 · לחץ רענון לנתונים חיים</div>
+  <div class="league-pills" id="basePills"></div>
+  <div class="extras-label">+ הוסף ליגה:</div>
+  <div class="extra-btns" id="extraBtns"></div>
+  <button class="refresh-btn" id="refreshBtn" onclick="doRefresh()">🔄 רענן נתונים חיים</button>
+  <div class="quota-bar" id="quotaBar"></div>
+  <div id="errBox"></div>
+</div>
+
+<div class="tabs" id="tabsBar"></div>
+<div class="sec-hdr"><span class="sec-title" id="secTitle"></span><span class="sec-hint" id="secHint"></span></div>
+<div id="content"><div class="loader">לחץ 🔄 רענן לטעינת נתונים חיים מ-API-Football</div></div>
+<div class="footer">⚡ מופעל ע"י API-Football · נתונים חיים ואמיתיים</div>
+
+<script>
+const API_KEY = "1ed74b34ad35d66ee17b54c994e37991";
+const API_BASE = "https://v3.football.api-sports.io";
+const SEASON = 2025;
+
+const LEAGUES = {
+  premier:      {name:"פרמייר ליג",   flag:"🏴",  color:"#5B0088",light:"#F5F0FF",id:39},
+  laliga:       {name:"לה ליגה",      flag:"🇪🇸",color:"#E84B10",light:"#FFF6F0",id:140},
+  bundesliga:   {name:"בונדסליגה",    flag:"🇩🇪",color:"#CC0000",light:"#FFF5F5",id:78},
+  serieA:       {name:"סריה א׳",      flag:"🇮🇹",color:"#1A7A45",light:"#EDFAF3",id:135},
+  ligue1:       {name:"ליג 1",        flag:"🇫🇷",color:"#003F8A",light:"#EEF4FF",id:61},
+  primeiraliga: {name:"פרימיירה ליגה",flag:"🇵🇹",color:"#8B0000",light:"#FFF0F0",id:94},
+  eredivisie:   {name:"ארדביזיה",     flag:"🇳🇱",color:"#C97700",light:"#FFFBEB",id:88},
+};
+
+const BASE   = ["premier","laliga","bundesliga","serieA","ligue1"];
+const EXTRAS = ["primeiraliga","eredivisie"];
+
+// Teams that have clinched (updated by standings data)
+let champions = new Set();
+
+// Data store
+let standingsData = {}; // lk -> array of team objects
+let scorersData   = {}; // lk -> array
+let assistsData   = {}; // lk -> array
+let activeExtras  = [];
+let activeTab     = "standings";
+let remainingQ    = null;
+
+const MEDAL = ["🥇","🥈","🥉"];
+const getRateColor = r => r>=85?"#15803d":r>=75?"#16a34a":r>=70?"#d97706":r>=65?"#ea580c":"#dc2626";
+
+// ── API ──
+async function apiFetch(endpoint){
+  const res = await fetch(API_BASE + endpoint, {
+    headers: {"x-apisports-key": API_KEY}
+  });
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  const rem = res.headers.get("x-ratelimit-requests-remaining");
+  if (rem !== null) remainingQ = rem;
+  const json = await res.json();
+  if (json.errors && Object.keys(json.errors).length > 0)
+    throw new Error(JSON.stringify(json.errors));
+  return json.response;
+}
+
+// ── FETCH STANDINGS ──
+async function fetchStandings(lk){
+  const l = LEAGUES[lk];
+  const resp = await apiFetch(`/standings?league=${l.id}&season=${SEASON}`);
+  if (!resp || !resp[0]) return [];
+  const rows = resp[0].league.standings[0];
+  return rows.map(r => ({
+    name:   r.team.name,
+    logo:   r.team.logo,
+    pts:    r.points,
+    g:      r.all.played,
+    gf:     r.all.goals.for,
+    ga:     r.all.goals.against,
+    w:      r.all.win,
+    d:      r.all.draw,
+    l:      r.all.lose,
+    form:   (r.form||"").split("").slice(0,5),
+    rank:   r.rank,
+    description: r.description || "",
+  }));
+}
+
+// ── FETCH TOP SCORERS ──
+async function fetchScorers(lk){
+  const l = LEAGUES[lk];
+  const resp = await apiFetch(`/players/topscorers?league=${l.id}&season=${SEASON}`);
+  return (resp||[]).slice(0,10).map(r => ({
+    name:   r.player.name,
+    photo:  r.player.photo,
+    team:   r.statistics[0]?.team?.name || "",
+    teamLogo: r.statistics[0]?.team?.logo || "",
+    goals:  r.statistics[0]?.goals?.total || 0,
+    assists:r.statistics[0]?.goals?.assists || 0,
+    games:  r.statistics[0]?.games?.appearences || 0,
+    lk,
+  }));
+}
+
+// ── FETCH TOP ASSISTS ──
+async function fetchAssists(lk){
+  const l = LEAGUES[lk];
+  const resp = await apiFetch(`/players/topassists?league=${l.id}&season=${SEASON}`);
+  return (resp||[]).slice(0,10).map(r => ({
+    name:    r.player.name,
+    photo:   r.player.photo,
+    team:    r.statistics[0]?.team?.name || "",
+    teamLogo:r.statistics[0]?.team?.logo || "",
+    goals:   r.statistics[0]?.goals?.total || 0,
+    assists: r.statistics[0]?.goals?.assists || 0,
+    games:   r.statistics[0]?.games?.appearences || 0,
+    lk,
+  }));
+}
+
+// ── REFRESH ──
+async function doRefresh(){
+  const btn = document.getElementById("refreshBtn");
+  const upd = document.getElementById("updInfo");
+  const err = document.getElementById("errBox");
+  btn.disabled = true;
+  err.innerHTML = "";
+  document.getElementById("content").innerHTML = '<div class="loader">⏳ טוען נתונים חיים...</div>';
+
+  const lks = activeLks();
+  for (const lk of lks){
+    const l = LEAGUES[lk];
+    btn.textContent = `⏳ טוען ${l.name}...`;
+    try {
+      standingsData[lk] = await fetchStandings(lk);
+      render();
+    } catch(e){
+      err.innerHTML += `<div class="err-msg">⚠️ ${l.name} טבלה: ${e.message}</div>`;
+    }
+    // scorers
+    try {
+      scorersData[lk] = await fetchScorers(lk);
+    } catch(e){
+      err.innerHTML += `<div class="err-msg">⚠️ ${l.name} כובשים: ${e.message}</div>`;
+    }
+    // assists
+    try {
+      assistsData[lk] = await fetchAssists(lk);
+    } catch(e){
+      err.innerHTML += `<div class="err-msg">⚠️ ${l.name} בישולים: ${e.message}</div>`;
+    }
+  }
+
+  // detect champions (rank 1 + description contains "Champion")
+  champions = new Set();
+  for (const lk of lks){
+    const rows = standingsData[lk] || [];
+    const champ = rows.find(r => r.rank === 1 && (r.description||"").toLowerCase().includes("champion"));
+    if (champ) champions.add(champ.name);
+  }
+
+  btn.disabled = false;
+  btn.textContent = "🔄 רענן נתונים חיים";
+  upd.textContent = `עונת 2025-26 · עודכן ${new Date().toLocaleTimeString("he-IL")}`;
+  if (remainingQ !== null)
+    document.getElementById("quotaBar").innerHTML = `נותרו היום: <span class="quota-used">${remainingQ}</span> בקשות`;
+  render();
+}
+
+// ── HELPERS ──
+function activeLks(){ return [...BASE, ...activeExtras]; }
+
+function allTeams(){
+  return activeLks().flatMap(lk =>
+    (standingsData[lk]||[]).map(t => ({
+      ...t, lk,
+      rate: +(t.pts/(t.g*3)*100).toFixed(1),
+      gfPG: +(t.gf/t.g).toFixed(2),
+      gaPG: +(t.ga/t.g).toFixed(2),
+    }))
+  ).filter(t => t.g > 0);
+}
+
+function allScorers(){
+  return activeLks().flatMap(lk => (scorersData[lk]||[]))
+    .sort((a,b) => b.goals - a.goals).slice(0,20);
+}
+
+function allAssists(){
+  return activeLks().flatMap(lk => (assistsData[lk]||[]))
+    .sort((a,b) => b.assists - a.assists).slice(0,20);
+}
+
+function allInvolvement(){
+  // merge scorers + assists by name+team
+  const map = new Map();
+  activeLks().forEach(lk => {
+    [...(scorersData[lk]||[]), ...(assistsData[lk]||[])].forEach(p => {
+      const key = p.name + "|" + lk;
+      const ex = map.get(key);
+      if (!ex) { map.set(key, {...p}); }
+      else {
+        ex.goals   = Math.max(ex.goals,   p.goals);
+        ex.assists = Math.max(ex.assists, p.assists);
+      }
+    });
+  });
+  return [...map.values()]
+    .map(p => ({...p, inv: p.goals + p.assists}))
+    .sort((a,b) => b.inv - a.inv).slice(0,20);
+}
+
+// ── RENDER HELPERS ──
+function rankHtml(i){
+  return i < 3
+    ? `<div class="rank"><span class="medal">${MEDAL[i]}</span></div>`
+    : `<div class="rank">#${i+1}</div>`;
+}
+
+function avatarHtml(logo, name, lk){
+  const l = LEAGUES[lk];
+  if (logo) return `<div class="avatar" style="background:#f5f5f5;border:2px solid ${l.color}33"><img src="${logo}" onerror="this.parentElement.textContent='${name.slice(0,2)}'"></div>`;
+  return `<div class="avatar" style="background:linear-gradient(135deg,${l.color},${l.color}99)">${name.slice(0,2)}</div>`;
+}
+
+function pillHtml(lk){
+  const l = LEAGUES[lk];
+  return `<span class="lpill-sm" style="background:linear-gradient(135deg,${l.color},${l.color}cc)">${l.flag} ${l.name}</span>`;
+}
+
+function trophyHtml(name){
+  return champions.has(name) ? `<span class="trophy">🏆</span>` : "";
+}
+
+// ── RENDER TABS ──
+const TABS = [
+  {id:"standings",label:"🏆 דירוג",  color:"#1a1a2e"},
+  {id:"hotcold",  label:"🔥❄️ טופס", color:"#e84b10"},
+  {id:"attack",   label:"⚔️ התקפה", color:"#CC0000"},
+  {id:"defense",  label:"🛡️ הגנה",  color:"#003F8A"},
+  {id:"scorers",  label:"⚽ כובשים", color:"#1A7A45"},
+  {id:"assists",  label:"🅰️ בישולים",color:"#7C3AED"},
+  {id:"involve",  label:"🎯 מעורבות",color:"#B45309"},
+];
+const HINTS = {
+  standings: "ממוין לפי נקודות · 🏆 = אלוף",
+  hotcold:   "5 המשחקים האחרונים",
+  attack:    "סה״כ גולים (ממוצע למשחק בקטן)",
+  defense:   "סה״כ ספיגות — פחות = עדיף",
+  scorers:   "גולים בליגה",
+  assists:   "בישולים בליגה",
+  involve:   "גולים + בישולים ביחד",
+};
+
+function buildTabs(){
+  document.getElementById("tabsBar").innerHTML = TABS.map(t =>
+    `<button class="tab${t.id===activeTab?" active":""}" style="--tc:${t.color}" onclick="switchTab('${t.id}')">${t.label}</button>`
+  ).join("");
+  const t = TABS.find(t=>t.id===activeTab);
+  document.getElementById("secTitle").textContent = t.label;
+  document.getElementById("secTitle").style.color  = t.color;
+  document.getElementById("secHint").textContent   = HINTS[activeTab];
+}
+
+function switchTab(id){ activeTab=id; buildTabs(); render(); }
+
+// ── RENDER STANDINGS ──
+function renderStandings(){
+  const teams = [...allTeams()].sort((a,b) => b.pts - a.pts);
+  if (!teams.length) return noData();
+  let h = "";
+  teams.forEach((t,i) => {
+    const l = LEAGUES[t.lk];
+    const bg = i%2===0 ? "#fff" : l.light;
+    const pc = getRateColor(t.rate);
+    h += `<div class="row" style="background:${bg};border-right:4px solid ${l.color}">
+      ${rankHtml(i)}
+      ${avatarHtml(t.logo, t.name, t.lk)}
+      <div class="info">
+        <div class="team-name">${trophyHtml(t.name)}${t.name}</div>
+        ${pillHtml(t.lk)}
+      </div>
+      <div class="metric-std">
+        <div class="gms-col"><div class="gms-num">${t.g}</div><div class="gms-lbl">מש׳</div></div>
+        <div class="pts-col"><div class="pts-num">${t.pts}</div><div class="pts-lbl">נק׳</div></div>
+        <div class="pct" style="background:${pc}">
+          <div class="pct-num">${t.rate}%</div>
+          <div class="pct-lbl">הצלחה</div>
+        </div>
+      </div>
+    </div>`;
+  });
+  h += `<div class="legend">
+    <div class="leg-t">אחוז הצלחה:</div>
+    <div class="leg-items">
+      ${[["#15803d","85%+"],["#16a34a","75-85%"],["#d97706","70-75%"],["#ea580c","65-70%"],["#dc2626","<65%"]].map(([c,lb])=>
+        `<div class="leg-i"><span class="leg-dot" style="background:${c}"></span>${lb}</div>`).join("")}
+    </div>
+  </div>`;
+  return h;
+}
+
+// ── RENDER HOT/COLD ──
+function renderHotCold(){
+  const teams = allTeams().filter(t => t.form && t.form.length > 0);
+  if (!teams.length) return noData();
+  const score = f => f.reduce((s,r)=>s+(r==="W"?3:r==="D"?1:0),0);
+  const sorted = [...teams].sort((a,b) => score(b.form) - score(a.form));
+  const hot  = sorted.slice(0,7);
+  const cold = sorted.slice(-5).reverse();
+
+  const formRow = (t,i,hotMode) => {
+    const l = LEAGUES[t.lk];
+    const sc = score(t.form);
+    const badge = sc>=12?"🔥🔥":sc>=9?"🔥":sc>=6?"😐":sc>=3?"❄️":"❄️❄️";
+    const bg = hotMode ? (i%2===0?"#fff":"#fff7ed") : (i%2===0?"#fff":"#eff6ff");
+    const dots = t.form.map(r=>`<div class="fd fd-${r.toLowerCase()}">${r}</div>`).join("");
+    return `<div class="row" style="background:${bg};border-right:4px solid ${l.color}">
+      ${rankHtml(i)}
+      ${avatarHtml(t.logo, t.name, t.lk)}
+      <div class="info">
+        <div class="team-name">${trophyHtml(t.name)}${t.name}</div>
+        ${pillHtml(t.lk)}
+      </div>
+      <span class="form-badge">${badge}</span>
+      <div class="form-dots">${dots}</div>
+    </div>`;
+  };
+
+  let h = `<div class="hot-hdr" style="background:#fff7ed;color:#c2410c;border-color:#ea580c">🔥 קבוצות לוהטות</div>`;
+  hot.forEach((t,i) => h += formRow(t,i,true));
+  h += `<div class="hot-hdr" style="background:#eff6ff;color:#1d4ed8;border-color:#2563eb;margin-top:4px">❄️ קבוצות בקריסה</div>`;
+  cold.forEach((t,i) => h += formRow(t,i,false));
+  h += `<div style="padding:7px 14px;font-size:10px;color:#aaa;background:#fff;border-top:1px solid #eee">W=ניצחון · D=תיקו · L=הפסד · נתוני טופס חיים מ-API</div>`;
+  return h;
+}
+
+// ── RENDER ATTACK ──
+function renderAttack(){
+  const teams = [...allTeams()].sort((a,b)=>b.gf-a.gf);
+  if (!teams.length) return noData();
+  let h = "";
+  teams.forEach((t,i) => {
+    const l = LEAGUES[t.lk];
+    h += `<div class="row" style="background:${i%2===0?"#fff":l.light};border-right:4px solid ${l.color}">
+      ${rankHtml(i)}
+      ${avatarHtml(t.logo, t.name, t.lk)}
+      <div class="info">
+        <div class="team-name">${trophyHtml(t.name)}${t.name}</div>
+        ${pillHtml(t.lk)}
+      </div>
+      <div class="metric-atk">
+        <div class="stat-side">
+          <div class="stat-gms">${t.g}</div>
+          <div class="stat-gms-l">משחקים</div>
+          <div class="stat-avg" style="color:#CC000099">ממוצע ${t.gfPG}/מש׳</div>
+        </div>
+        <div class="big-num" style="color:#CC0000">${t.gf}</div>
+      </div>
+    </div>`;
+  });
+  return h;
+}
+
+// ── RENDER DEFENSE ──
+function renderDefense(){
+  const teams = [...allTeams()].sort((a,b)=>a.ga-b.ga);
+  if (!teams.length) return noData();
+  let h = "";
+  teams.forEach((t,i) => {
+    const l = LEAGUES[t.lk];
+    h += `<div class="row" style="background:${i%2===0?"#fff":l.light};border-right:4px solid ${l.color}">
+      ${rankHtml(i)}
+      ${avatarHtml(t.logo, t.name, t.lk)}
+      <div class="info">
+        <div class="team-name">${trophyHtml(t.name)}${t.name}</div>
+        ${pillHtml(t.lk)}
+      </div>
+      <div class="metric-atk">
+        <div class="stat-side">
+          <div class="stat-gms">${t.g}</div>
+          <div class="stat-gms-l">משחקים</div>
+          <div class="stat-avg" style="color:#003F8A99">ממוצע ${t.gaPG}/מש׳</div>
+        </div>
+        <div class="big-num" style="color:#003F8A">${t.ga}</div>
+      </div>
+    </div>`;
+  });
+  return h;
+}
+
+// ── RENDER PLAYERS ──
+function playerRow(p, i, mainStat, mainColor, subLine){
+  const l = LEAGUES[p.lk];
+  const bg = i%2===0 ? "#fff" : l.light;
+  const photoHtml = p.photo
+    ? `<img src="${p.photo}" class="player-img" style="border-color:${l.color}44" onerror="this.style.display='none'">`
+    : "";
+  return `<div class="row" style="background:${bg};border-right:4px solid ${l.color}">
+    ${rankHtml(i)}
+    <div style="position:relative;flex-shrink:0;width:40px;height:40px">
+      ${photoHtml}
+      ${!p.photo?`<div class="avatar" style="background:linear-gradient(135deg,${l.color},${l.color}99);width:40px;height:40px">${p.name.slice(0,2)}</div>`:""}
+    </div>
+    <div class="info">
+      <div class="team-name">${p.name}</div>
+      <div style="font-size:10px;color:#666;display:flex;align-items:center;gap:4px">
+        ${p.teamLogo?`<img src="${p.teamLogo}" style="width:13px;height:13px;object-fit:contain">`:""}
+        ${p.team}
+      </div>
+      ${pillHtml(p.lk)}
+    </div>
+    <div style="text-align:center;flex-shrink:0">
+      <div class="player-ball" style="background:linear-gradient(135deg,${mainColor},${mainColor}cc);box-shadow:0 3px 8px ${mainColor}55;margin:0 auto">${mainStat}</div>
+      <div class="player-sub">${subLine}</div>
+    </div>
+  </div>`;
+}
+
+function renderScorers(){
+  const list = allScorers();
+  if (!list.length) return noData();
+  return list.map((p,i) => playerRow(p,i,p.goals,"#1A7A45",`${p.games} משחקים`)).join("");
+}
+
+function renderAssists(){
+  const list = allAssists();
+  if (!list.length) return noData();
+  return list.map((p,i) => playerRow(p,i,p.assists,"#7C3AED",`${p.goals} גולים · ${p.games} מש׳`)).join("");
+}
+
+function renderInvolvement(){
+  const list = allInvolvement();
+  if (!list.length) return noData();
+  return list.map((p,i) => {
+    const subLine = `⚽${p.goals} + 🅰️${p.assists} · ${p.games} מש׳`;
+    return playerRow(p,i,p.inv,"#B45309",subLine);
+  }).join("");
+}
+
+function noData(){
+  return `<div class="loader">לחץ 🔄 רענן לטעינת נתונים</div>`;
+}
+
+// ── RENDER ──
+function render(){
+  const map = {
+    standings: renderStandings,
+    hotcold:   renderHotCold,
+    attack:    renderAttack,
+    defense:   renderDefense,
+    scorers:   renderScorers,
+    assists:   renderAssists,
+    involve:   renderInvolvement,
+  };
+  document.getElementById("content").innerHTML = map[activeTab]();
+}
+
+// ── BUILD HEADER ──
+function buildHeader(){
+  document.getElementById("basePills").innerHTML = BASE.map(lk => {
+    const l = LEAGUES[lk];
+    return `<span class="lpill" style="background:linear-gradient(135deg,${l.color},${l.color}cc)">${l.flag} ${l.name}</span>`;
+  }).join("");
+
+  document.getElementById("extraBtns").innerHTML = EXTRAS.map(lk => {
+    const l = LEAGUES[lk];
+    return `<button class="extrabtn" id="eb_${lk}"
+      style="background:rgba(255,255,255,.08);border:1.5px solid ${l.color};color:${l.color}"
+      onclick="toggleExtra('${lk}')">${l.flag} ${l.name}</button>`;
+  }).join("");
+}
+
+function toggleExtra(lk){
+  const l = LEAGUES[lk];
+  const btn = document.getElementById("eb_"+lk);
+  if (activeExtras.includes(lk)){
+    activeExtras = activeExtras.filter(k=>k!==lk);
+    btn.style.background = "rgba(255,255,255,.08)";
+    btn.style.color = l.color;
+    btn.textContent = l.flag + " " + l.name;
+  } else {
+    activeExtras.push(lk);
+    btn.style.background = `linear-gradient(135deg,${l.color},${l.color}cc)`;
+    btn.style.color = "#fff";
+    btn.textContent = "✓ " + l.flag + " " + l.name;
+    // auto-fetch if not loaded
+    if (!standingsData[lk]){
+      doRefreshSingle(lk);
+    }
+  }
+  render();
+}
+
+async function doRefreshSingle(lk){
+  const l = LEAGUES[lk];
+  try {
+    standingsData[lk] = await fetchStandings(lk);
+    scorersData[lk]   = await fetchScorers(lk);
+    assistsData[lk]   = await fetchAssists(lk);
+    render();
+  } catch(e){
+    document.getElementById("errBox").innerHTML += `<div class="err-msg">⚠️ ${l.name}: ${e.message}</div>`;
+  }
+}
+
+// ── INIT ──
+buildHeader();
+buildTabs();
+render();
+</script>
+</body>
+</html>
